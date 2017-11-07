@@ -77,7 +77,7 @@ public class WebActivity extends AppCompatActivity implements WebContract.IView{
         //  }
         //});
 
-        webContainer.setWebContentsDebuggingEnabled(true);
+        WebView.setWebContentsDebuggingEnabled(true);
 
         webContainer.getSettings().setJavaScriptEnabled(true);
         webContainer.getSettings().getAllowFileAccessFromFileURLs();

@@ -1,36 +1,41 @@
 package com.jiangkang.ktools;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Button;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
-import com.jiangkang.ktools.requests.LoginActivity;
-import com.jiangkang.tools.widget.KDialog;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
+import com.jiangkang.annotations.log.DebugLog;
+import com.jiangkang.ktools.requests.gank.GankFragment;
+import com.jiangkang.ktools.requests.juejin.JuejinFragment;
+import com.jiangkang.ktools.requests.wechat.WechatFragment;
+import com.jiangkang.ktools.requests.zhihu.ZhihuFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class RequestsActivity extends AppCompatActivity {
 
-    @BindView(R.id.btn_get_a_url)
-    Button btnGetAUrl;
-    @BindView(R.id.btn_post)
-    Button btnPost;
-    private OkHttpClient client;
+    @BindView(R.id.layout_requests_content)
+    FrameLayout layoutRequestsContent;
+    @BindView(R.id.tab_layout_requests)
+    TabLayout tabLayoutRequests;
 
-    private static final String URL_GET = "https://api.github.com";
+    private static final String[] TABS = new String[]{
+            "知乎", "掘金", "干货", "微信"
+    };
+
+    private static final Fragment[] FRAGMENTS = new Fragment[]{
+            new ZhihuFragment(),
+            new JuejinFragment(),
+            new GankFragment(),
+            new WechatFragment()
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,50 +44,56 @@ public class RequestsActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setTitle("Requests");
 
-        initVar();
+        initViews();
 
     }
 
-    private void initVar() {
-        client = new OkHttpClient();
-    }
+    @DebugLog
+    private void initViews() {
 
-
-    private void getAUrl() {
-        requestUrl(URL_GET);
-    }
-
-    private void requestUrl(final String url) {
-        new Thread(new Runnable() {
+        tabLayoutRequests.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void run() {
-                Request request = new Request.Builder()
-                        .url(url)
-                        .build();
-                try {
-                    Response response = client.newCall(request).execute();
-                    String result = response.body().string();
-                    KDialog.showMsgDialog(RequestsActivity.this, new JSONObject(result).toString(4));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+            public void onTabSelected(TabLayout.Tab tab) {
+                ((TextView)tab.getCustomView().findViewById(R.id.tv_tab_title)).setTextColor(Color.parseColor("#f44336"));
+                loadFragment(tab.getTag());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                ((TextView)tab.getCustomView().findViewById(R.id.tv_tab_title)).setTextColor(Color.BLACK);
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
 
             }
-        }).start();
+        });
+
+        addTabItem();
+
     }
 
-
-    @OnClick(R.id.btn_get_a_url)
-    public void onBtnGetAUrlClicked() {
-        getAUrl();
+    private void loadFragment(Object tag) {
+        int tagIndex = (int) tag;
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.layout_requests_content,FRAGMENTS[tagIndex], String.valueOf(tagIndex))
+                .commit();
     }
 
-    @OnClick(R.id.btn_post)
-    public void onBtnPostClicked() {
-//        LoginActivity.launch(this,null);
-      Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-      startActivity(intent);
+    private void addTabItem() {
+        for (int i = 0; i < TABS.length; i++) {
+            tabLayoutRequests.addTab(tabLayoutRequests.newTab().setCustomView(getTabItemView(i)).setTag(i));
+        }
     }
+
+    private View getTabItemView(int i) {
+        View itemView = LayoutInflater.from(this).inflate(R.layout.tab_item_text, tabLayoutRequests, false);
+        TextView tvTabTitle = (TextView) itemView.findViewById(R.id.tv_tab_title);
+        tvTabTitle.setAllCaps(false);
+        tvTabTitle.setText(TABS[i]);
+        itemView.setTag(i);
+        return itemView;
+    }
+
 }

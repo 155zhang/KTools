@@ -11,16 +11,18 @@ ext {
             versionCode               :  1,
             versionName               :  '1.0',
 
+
             //ButterKnife
             butterKnifeVersion        :  '8.2.1',
 
             //android
             v7Version                 :  '25.3.1',
+            "support-version"         :  '25.4.0',
 
             constraintLayoutVersion   :  '1.0.2',
 
             //glide
-            glideVersion              :  '4.0.0-RC1',
+            glideVersion              :  '4.2.0',
 
             //greendao
             greendaoVersion           : '3.2.2',
@@ -43,10 +45,18 @@ ext {
 
             retrofitVersion           : '2.3.0',
 
+            loggerVersion             : '2.1.1',
+
 
     ]
 
     deps = [
+
+            okhttp3 : [
+                    'okhttp'             : "com.squareup.okhttp3:okhttp:${libVersion.okhttpVersion}",
+                    'mockwebserver'      : "com.squareup.okhttp3:mockwebserver:${libVersion.okhttpVersion}",
+                    'logginginterceptor': "com.squareup.okhttp3:logging-interceptor:${libVersion.okhttpVersion}",
+            ],
 
             //ButterKnife
             butterKnife        : "com.jakewharton:butterknife:${libVersion.butterKnifeVersion}",
@@ -103,6 +113,9 @@ ext {
             retrofit           : "com.squareup.retrofit2:retrofit:${libVersion.retrofitVersion}",
             retrofit_converterJson : "com.squareup.retrofit2:converter-gson:${libVersion.retrofitVersion}",
             retrofit_adpter_rxjava2: "com.squareup.retrofit2:adapter-rxjava2:${libVersion.retrofitVersion}",
+
+            "logger"           : "com.orhanobut:logger:${libVersion.loggerVersion}",
+
     ]
 
 }

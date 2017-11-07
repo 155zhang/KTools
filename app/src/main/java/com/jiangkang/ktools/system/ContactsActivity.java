@@ -21,10 +21,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
-* 利用Loader获取通讯录列表
-* */
-
+/**
+ * 利用Loader获取通讯录列表
+ *
+ * @author jiangkang
+ */
 public class ContactsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int LOAD_ID = 0;
@@ -121,12 +122,12 @@ public class ContactsActivity extends AppCompatActivity implements LoaderManager
                     cursor.close();
                 }
                 result = new JsonGenerator()
-                        .put("list",jsonArray)
+                        .put("list", jsonArray)
                         .gen();
 
                 data.close();
 
-                if (listener != null){
+                if (listener != null) {
                     listener.success(result);
                 }
 
@@ -146,7 +147,7 @@ public class ContactsActivity extends AppCompatActivity implements LoaderManager
         this.listener = listener;
     }
 
-    interface QueryListener{
+    interface QueryListener {
         void success(JSONObject object);
     }
 

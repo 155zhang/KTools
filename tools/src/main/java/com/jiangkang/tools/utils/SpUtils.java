@@ -2,6 +2,7 @@ package com.jiangkang.tools.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.MainThread;
 
 import com.jiangkang.tools.King;
 
@@ -9,9 +10,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
- * Created by jiangkang on 2017/9/24.
+ *
+ * @author jiangkang
+ * @date 2017/9/24
+ *
  * SharedPreference 工具类
  */
 
@@ -25,7 +30,6 @@ public class SpUtils {
     private SharedPreferences.Editor editor;
 
 
-
     public static SpUtils getInstance(Context context,String name){
         return new SpUtils(context,name);
     }
@@ -34,6 +38,24 @@ public class SpUtils {
     private SpUtils(Context context, String name) {
         preferences = context.getSharedPreferences(name,Context.MODE_PRIVATE);
         editor = preferences.edit();
+    }
+
+
+    public <T> SpUtils put(String key, T value){
+        if (value instanceof String){
+            editor.putString(key, (String) value);
+        }else if (value instanceof Boolean){
+            editor.putBoolean(key, (Boolean) value);
+        }else if (value instanceof Integer){
+            editor.putInt(key, (Integer) value);
+        }else if (value instanceof Long){
+            editor.putLong(key, (Long) value);
+        }else if (value instanceof Float){
+            editor.putFloat(key, (Float) value);
+        }else {
+            throw new IllegalArgumentException("value can not support");
+        }
+        return this;
     }
 
     public SpUtils putString(String key, String value){

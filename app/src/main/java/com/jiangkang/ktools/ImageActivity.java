@@ -19,14 +19,15 @@ import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.VideoView;
 
+import com.jiangkang.ktools.image.GalleryActivity;
 import com.jiangkang.ktools.web.WebActivity;
 import com.jiangkang.tools.permission.RxPermissions;
 import com.jiangkang.tools.utils.FileUtils;
 import com.jiangkang.tools.utils.ImageUtils;
 import com.jiangkang.tools.utils.ToastUtils;
+import com.jiangkang.tools.widget.KDialog;
 
 import java.io.File;
 import java.io.IOException;
@@ -72,6 +73,8 @@ public class ImageActivity extends AppCompatActivity {
     EditText etMaxWidth;
     @BindView(R.id.et_max_height)
     EditText etMaxHeight;
+    @BindView(R.id.btn_image_gallery)
+    Button btnImageGallery;
 
     private File outputImageFile;
 
@@ -105,7 +108,6 @@ public class ImageActivity extends AppCompatActivity {
         albumIntent.setType("image/*");
         startActivityForResult(albumIntent, REQUEST_OPEN_ALBUM);
     }
-
 
     @Override
     protected void onDestroy() {
@@ -184,13 +186,13 @@ public class ImageActivity extends AppCompatActivity {
 
     private void handleImageCaptureWithoutCompress(Intent data) {
         final Bitmap bitmap = BitmapFactory.decodeFile(outputImageFile.getAbsolutePath());
-        showImgInDialog(bitmap);
+        KDialog.showImgInDialog(this, bitmap);
     }
 
     private void handleImageCaptureData(Intent data) {
         //这张图是经过压缩的，清晰度低
         Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-        showImgInDialog(bitmap);
+        KDialog.showImgInDialog(this, bitmap);
     }
 
     private void handleAlbumData(Intent data) {
@@ -218,21 +220,7 @@ public class ImageActivity extends AppCompatActivity {
     private void showBitmap(String imagePath) {
         ToastUtils.showShortToast(imagePath);
         Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-        showImgInDialog(bitmap);
-    }
-
-    private void showImgInDialog(Bitmap bitmap) {
-        ImageView imageView = new ImageView(this);
-        imageView.setImageBitmap(bitmap);
-        new AlertDialog.Builder(this)
-                .setView(imageView)
-                .setNegativeButton("关闭", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .show();
+        KDialog.showImgInDialog(this, bitmap);
     }
 
     @OnClick(R.id.btn_take_picture)
@@ -308,7 +296,7 @@ public class ImageActivity extends AppCompatActivity {
         decorView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         decorView.buildDrawingCache();
         Bitmap screen = Bitmap.createBitmap(decorView.getDrawingCache());
-        showImgInDialog(screen);
+        KDialog.showImgInDialog(this, screen);
     }
 
     @OnClick(R.id.btn_take_picture_without_compress)
@@ -368,15 +356,20 @@ public class ImageActivity extends AppCompatActivity {
         Bitmap srcBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.demo);
         int maxWidth = srcBitmap.getWidth();
         int maxHeight = srcBitmap.getHeight();
-        if (!TextUtils.isEmpty(etMaxWidth.getText().toString()) && TextUtils.isDigitsOnly(etMaxWidth.getText().toString())){
+        if (!TextUtils.isEmpty(etMaxWidth.getText().toString()) && TextUtils.isDigitsOnly(etMaxWidth.getText().toString())) {
             maxWidth = Integer.parseInt(etMaxWidth.getText().toString());
         }
-        if (!TextUtils.isEmpty(etMaxHeight.getText().toString()) && TextUtils.isDigitsOnly(etMaxHeight.getText().toString())){
+        if (!TextUtils.isEmpty(etMaxHeight.getText().toString()) && TextUtils.isDigitsOnly(etMaxHeight.getText().toString())) {
             maxHeight = Integer.parseInt(etMaxHeight.getText().toString());
         }
-        Bitmap scaledBitmap = ImageUtils.scaleBitmap(srcBitmap,maxWidth,maxHeight);
-        if (scaledBitmap != null){
-            showImgInDialog(scaledBitmap);
+        Bitmap scaledBitmap = ImageUtils.scaleBitmap(srcBitmap, maxWidth, maxHeight);
+        if (scaledBitmap != null) {
+            KDialog.showImgInDialog(this, scaledBitmap);
         }
+    }
+
+    @OnClick(R.id.btn_image_gallery)
+    public void onImageGalleryClicked() {
+        GalleryActivity.launch(this,null);
     }
 }

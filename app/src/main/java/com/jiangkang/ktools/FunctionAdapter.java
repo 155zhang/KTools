@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jiangkang.ktools.effect.EffectActivity;
 import com.jiangkang.ktools.rxjava.RxJavaActivity;
 
 import butterknife.BindView;
@@ -45,6 +46,7 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.ViewHo
         functionList.add(new FunctionEntity("Scan",ScanActivity.class,R.drawable.ic_scan));
         functionList.add(new FunctionEntity("Audio",AudioActivity.class,R.drawable.ic_audio));
         functionList.add(new FunctionEntity("RxJava", RxJavaActivity.class,R.drawable.ic_rx_java));
+        functionList.add(new FunctionEntity("Effect", EffectActivity.class,R.drawable.ic_effect));
     }
 
     @Override

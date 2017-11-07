@@ -6,9 +6,10 @@ import com.jiangkang.tools.King;
 import com.squareup.leakcanary.LeakCanary;
 
 /**
- * Created by jiangkang on 2017/9/6.
+ *
+ * @author jiangkang
+ * @date 2017/9/6
  */
-
 public class KApplication extends Application{
 
     @Override

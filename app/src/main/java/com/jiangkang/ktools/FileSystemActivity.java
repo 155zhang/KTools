@@ -1,20 +1,15 @@
 package com.jiangkang.ktools;
 
-import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.JsonReader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -28,7 +23,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -39,6 +33,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+/**
+ * @author jiangkang
+ */
 public class FileSystemActivity extends AppCompatActivity {
 
     private static final String TAG = FileSystemActivity.class.getSimpleName();
@@ -118,7 +115,7 @@ public class FileSystemActivity extends AppCompatActivity {
             AssetFileDescriptor descriptor = FileUtils.getAssetFileDescription("music/baiyemeng.mp3");
             MediaPlayer player = new MediaPlayer();
             player.setDataSource(descriptor.getFileDescriptor(),descriptor.getStartOffset(),descriptor.getLength());
-            player.prepare();
+            player.prepareAsync();
             player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {

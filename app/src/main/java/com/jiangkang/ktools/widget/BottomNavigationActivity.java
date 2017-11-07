@@ -35,6 +35,8 @@ public class BottomNavigationActivity extends AppCompatActivity {
                     findViewById(R.id.container).setBackgroundColor(Color.parseColor("#795548"));
                     mTextMessage.setText(R.string.title_notifications);
                     return true;
+                default:
+                    break;
             }
             return false;
         }

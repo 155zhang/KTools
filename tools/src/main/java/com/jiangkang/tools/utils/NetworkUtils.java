@@ -40,17 +40,17 @@ public class NetworkUtils {
         sConnectivityManager = (ConnectivityManager) King.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 
-    public static String getNetWorkType(){
+    public static String getNetWorkType() {
         NetworkInfo networkInfo = sConnectivityManager.getActiveNetworkInfo();
         NetworkInfo mobileInfo = sConnectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
         NetworkInfo wifiInfo = sConnectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        if (networkInfo ==null || !networkInfo.isAvailable()){
+        if (networkInfo == null || !networkInfo.isAvailable()) {
             return NETWORK_TYPE_OFFLINE;
-        }else if (wifiInfo != null && wifiInfo.isAvailable()){
+        } else if (wifiInfo != null && wifiInfo.isAvailable()) {
             return NETWORK_TYPE_WIFI;
-        }else if (mobileInfo != null && mobileInfo.isAvailable()){
+        } else if (mobileInfo != null && mobileInfo.isAvailable()) {
             return NETWORK_TYPE_MOBILE;
-        }else {
+        } else {
             return NETWORK_TYPE_OTHER;
         }
     }
@@ -59,21 +59,21 @@ public class NetworkUtils {
     /*
     * 获取Wifi信号等级，分为0-4五个等级
     * */
-    public static int getSignalLevel(){
+    public static int getSignalLevel() {
         WifiInfo wifiInfo = sWifiManager.getConnectionInfo();
-        return WifiManager.calculateSignalLevel(wifiInfo.getRssi(),5);
+        return WifiManager.calculateSignalLevel(wifiInfo.getRssi(), 5);
     }
 
 
-    public static String getMacAddress(){
+    public static String getMacAddress() {
         WifiInfo wifiInfo = sWifiManager.getConnectionInfo();
         String macAddress = wifiInfo.getMacAddress();
-        if (!MAC_ADDRESS_DEFAULT.equals(macAddress)){
+        if (!MAC_ADDRESS_DEFAULT.equals(macAddress)) {
             return macAddress;
         }
 
         macAddress = getMacAddressByNetworkInterface();
-        if (!MAC_ADDRESS_DEFAULT.equals(macAddress)){
+        if (!MAC_ADDRESS_DEFAULT.equals(macAddress)) {
             return macAddress;
         }
         return MAC_ADDRESS_DEFAULT;
@@ -129,7 +129,9 @@ public class NetworkUtils {
     }
 
 
-
+    public static boolean isNetAvailable() {
+        return sConnectivityManager.getActiveNetworkInfo() != null;
+    }
 
 
 }

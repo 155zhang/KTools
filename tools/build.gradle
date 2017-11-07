@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.1"
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         minSdkVersion 19
@@ -44,6 +44,9 @@ dependencies {
     compile deps['rxAndroid']
     compile deps['rxJava']
 
+    compile deps['okhttp']
+    compile deps["okhttp-logging-interceptor"]
+
     compile 'com.android.support:support-annotations:25.0.1'
     compile 'com.android.support:appcompat-v7:25.4.0'
     compile 'com.android.support:support-v4:25.3.1'
@@ -53,4 +56,6 @@ dependencies {
 }
 repositories {
     mavenCentral()
+
+    compile deps["logger"]
 }

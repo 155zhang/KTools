@@ -1,10 +1,13 @@
+import org.aspectj.tools.ajc.Main
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
+
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.1"
+    compileSdkVersion libVersion.compileSdkVersion
+    buildToolsVersion libVersion.buildToolsVersion
     defaultConfig {
         applicationId "com.jiangkang.ktools"
         minSdkVersion 19
@@ -27,6 +30,7 @@ android {
     configurations.all {
         resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.1'
     }
+
     //    testOptions {
     //        unitTests {
     //            includeAndroidResources = true
@@ -39,6 +43,7 @@ android {
     }
 
 
+    buildToolsVersion '26.0.2'
 }
 
 dependencies {
@@ -46,6 +51,7 @@ dependencies {
 
     compile 'com.android.support:design:25.4.0'
     compile 'com.android.support:support-vector-drawable:25.4.0'
+    compile 'com.android.support:support-v4:25.4.0'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -63,9 +69,8 @@ dependencies {
     //    testCompile 'org.mockito:mockito-core:1.10.19'
     compile project(path: ':tools')
 
-    compile deps['okhttp']
-    compile deps["okhttp-logging-interceptor"]
-    compile deps['mockwebserver']
+
+
 
     //    testCompile "org.mockito:mockito-core:2.+"
     //    testCompile "org.robolectric:robolectric:3.4.2"
@@ -94,13 +99,56 @@ dependencies {
 //    compile deps['daggerSupport']
     annotationProcessor deps['daggerCompiler']
 
-    compile deps["retrofit"]
-    compile deps["retrofit_converterJson"]
-    compile deps["retrofit_adpter_rxjava2"]
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+//    compile deps["retrofit"]
+//    compile deps["retrofit_converterJson"]
+//    compile deps["retrofit_adpter_rxjava2"]
 
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    compile deps["glide"]
+    compile deps["glideOkhttp"]
+    annotationProcessor deps["glideCompiler"]
 //    compile 'com.google.android.exoplayer:exoplayer:r2.4.3'
+    compile project(path: ':requests')
+    compile project(path: ':annotations')
+    compile project(path:':aop')
 }
 repositories {
     mavenCentral()
+}
+
+
+project.android.applicationVariants.all { variant ->
+    JavaCompile javaCompile = variant.javaCompile
+    javaCompile.doLast {
+        String[] args = [
+                "-showWeaveInfo",
+                "-1.5",
+                "-inpath", javaCompile.destinationDir.toString(),
+                "-aspectpath", javaCompile.classpath.asPath,
+                "-d", javaCompile.destinationDir.toString(),
+                "-classpath", javaCompile.classpath.asPath,
+                "-bootclasspath", android.bootClasspath.join(File.pathSeparator)
+        ]
+
+        MessageHandler handler = new MessageHandler(true);
+        new Main().run(args, handler)
+
+        def log = project.logger
+        for (IMessage message : handler.getMessages(null, true)) {
+            switch (message.getKind()) {
+                case IMessage.ABORT:
+                case IMessage.ERROR:
+                case IMessage.FAIL:
+                    log.error message.message, message.thrown
+                    break
+                case IMessage.WARNING:
+                case IMessage.INFO:
+                    log.info message.message, message.thrown
+                    break
+                case IMessage.DEBUG:
+                    log.debug message.message, message.thrown
+                    break
+            }
+        }
+    }
 }

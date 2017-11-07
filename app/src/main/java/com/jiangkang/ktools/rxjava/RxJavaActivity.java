@@ -12,11 +12,6 @@ import com.jiangkang.ktools.rxjava.fragments.RxJavaFragment;
 public class RxJavaActivity extends AppCompatActivity{
 
 
-    public static void launch(Context context){
-        context.startActivity(new Intent(context,RxJavaActivity.class));
-    }
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
