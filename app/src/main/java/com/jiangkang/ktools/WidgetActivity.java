@@ -104,7 +104,7 @@ public class WidgetActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_widget_dialog)
     public void onBtnWidgetDialogClicked() {
-        KDialogActivity.launch(this, null);
+        KDialogActivity.Companion.launch(this, null);
     }
 
     @OnClick(R.id.btn_floating_action_button)
