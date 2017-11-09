@@ -40,6 +40,6 @@ task clean(type: Delete) {
 
 task wrapper(type: Wrapper) {
     gradleVersion = '4.1'
-    distributionUrl = '../../gradle-4.1-all.zip'
+    distributionUrl = '../../gradle-4.1-bin.zip'
 }
 
